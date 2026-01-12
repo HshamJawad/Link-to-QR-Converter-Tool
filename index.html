@@ -192,12 +192,40 @@ button {
 }
 
 /* ===== Responsive ===== */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
 .toggle {
     margin-left: auto;
     margin-top: 6px;
   }
 }
+/* ===== Mobile Layout Fix ===== */
+@media (max-width: 768px) {
+
+  .layout {
+    flex-direction: column;   
+  }
+
+  .left,
+  .right {
+    width: 100%;
+    max-width: 100%;
+  }
+
+ 
+  .right {
+    margin-top: 20px;
+  }
+
+  #qrcode-wrapper {
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .right button {
+    width: 100%;
+  }
+}
+
 </style>
 </head>
 
