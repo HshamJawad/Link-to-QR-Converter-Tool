@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Link to QR Converter Tool</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script src="qrcode.min.js"></script>
+
+<style>
+* { box-sizing: border-box; }
+
+/* ===== Theme ===== */
+:root {
+  --bg: #f2f4f8;
+  --card: #ffffff;
+  --text: #000;
+  --border: #ccc;
+}
+
+body.dark {
+  --bg: #1e1e1e;
+  --card: #2a2a2a;
+  --text: #ffffff;
+  --border: #444;
+}
+
+/* ===== Base ===== */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--bg);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--text);
+}
+
+/* ===== Card ===== */
+.card {
+  width: 900px;
+  max-width: 96%;
+  background: var(--card);
+  padding: 40px;
+  border-radius: 18px;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.15);
+  position: relative;
+  padding-bottom: 120px;
+}
+
+/* ===== Header ===== */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px; 
+}
+
+.header h2 {
+  margin: 0;
+  font-size: 26px;
+  white-space: nowrap;
+}
+
+.toggle {
+  font-size: 12px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid #007bff;
+  background: transparent;
+  color: #007bff;
+  cursor: pointer;
+
+  width: auto;         
+  white-space: nowrap;  
+  flex-shrink: 0;      
+}
+
+body.dark .toggle {
+  border-color: #ccc;
+  color: #ccc;
+}
+
+/* ===== Layout ===== */
+.layout {
+  display: flex;
+  gap: 30px;
+}
+
+.left, .right {
+  flex: 1;
+}
+
+.left {
+  min-height: 460px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== Inputs ===== */
+label {
+  font-weight: bold;
+  font-size: 14px;
+  margin-bottom: 6px;
+  display: block;
+}
+
+input, select {
+  width: 100%;
+  padding: 14px;
+  font-size: 15px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  margin-bottom: 16px;
+  background: var(--card);
+  color: var(--text);
+}
+
+/* ===== Buttons ===== */
+button {
+  width: 100%;
+  padding: 14px;
+  font-size: 15px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.primary   { background: #007bff; color: #fff; }
+.success   { background: #28a745; color: #fff; }
+.secondary { background: #6c757d; color: #fff; }
+.danger    { background: #dc3545; color: #fff; }
+
+/* ===== Color Picker ===== */
+.color-picker {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.color {
+  height: 36px;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.color.selected {
+  border-color: #007bff;
+}
+
+/* ===== QR ===== */
+#qrcode-wrapper {
+  background: #ffffff;
+  padding: 16px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#qrcode {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+#qrcode canvas {
+  display: block;
+}
+.qr-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+/* ===== Footer ===== */
+.footer {
+  position: absolute;
+  bottom: 25px;
+  left: 40px;
+  right: 40px;
+  font-size: 12px;
+  text-align: center;
+  opacity: 0.7;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 800px) {
+  .layout {
+    flex-direction: column;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+  <div class="header">
+    <h2>Link to QR Converter Tool</h2>
+    <button class="toggle" onclick="toggleDark()">Toggle Dark Mode</button>
+  </div>
+
+  <div class="layout">
+
+    <!-- LEFT -->
+    <div class="left">
+      <label>Input URL</label>
+      <input id="url" placeholder="https://example.com">
+
+     <div class="qr-center">
+  <div id="qrcode-wrapper">
+    <div id="qrcode"></div>
+  </div>
+</div>
+</div>
+    <!-- RIGHT -->
+    <div class="right">
+
+      <label>QR Size</label>
+      <select id="size" onchange="regenerate()">
+        <option value="220">Small</option>
+        <option value="280">Medium</option>
+        <option value="340" selected>Large</option>
+      </select>
+
+      <label>QR Color</label>
+      <div class="color-picker">
+        <div class="color selected" style="background:#000" data-color="#000"></div>
+        <div class="color" style="background:#1e88e5" data-color="#1e88e5"></div>
+        <div class="color" style="background:#2e7d32" data-color="#2e7d32"></div>
+        <div class="color" style="background:#d32f2f" data-color="#d32f2f"></div>
+        <div class="color" style="background:#6a1b9a" data-color="#6a1b9a"></div>
+        <div class="color" style="background:#616161" data-color="#616161"></div>
+        <div class="color" style="background:#f57c00" data-color="#f57c00"></div>
+      </div>
+
+      <button class="primary" onclick="generateQR()">Generate QR</button>
+      <button class="success" onclick="downloadQR()">Download PNG</button>
+      <button class="secondary" onclick="copyQR()">Copy QR Image</button>
+      <button class="danger" onclick="clearQR()">Delete</button>
+    </div>
+
+  </div>
+
+  <div class="footer">
+© 2026 Link to QR Converter Tool | by Husham Jawad Kadhim | Version 1.0 | All Rights Reserved
+<br><br>
+Disclaimer: The Link to QR Converter Tool is provided “as is” without warranty of any kind.
+The developer assumes no responsibility for any inaccuracies, errors, omissions, or inconsistencies
+in the generated QR codes. Users and facilitating institutions are solely responsible for verifying,
+validating, and making final decisions regarding all QR codes before use.
+  </div>
+
+</div>
+
+<script>
+let selectedColor = "#000";
+let lastURL = "";
+
+document.querySelectorAll(".color").forEach(c => {
+  c.onclick = () => {
+    document.querySelectorAll(".color").forEach(x => x.classList.remove("selected"));
+    c.classList.add("selected");
+    selectedColor = c.dataset.color;
+    regenerate();
+  };
+});
+
+function normalize(url) {
+  if (!url.startsWith("http")) return "https://" + url;
+  return url;
+}
+
+function generateQR() {
+  const input = document.getElementById("url");
+  if (!input.value.trim()) return alert("Please enter a URL");
+
+  lastURL = normalize(input.value.trim());
+  input.value = lastURL;
+  drawQR();
+}
+
+function regenerate() {
+  if (lastURL) drawQR();
+}
+
+function drawQR() {
+  document.getElementById("qrcode").innerHTML = "";
+  const size = document.getElementById("size").value;
+
+  new QRCode(document.getElementById("qrcode"), {
+    text: lastURL,
+    width: size,
+    height: size,
+    colorDark: selectedColor,
+    colorLight: "#ffffff",
+    correctLevel: QRCode.CorrectLevel.H
+  });
+}
+
+function downloadQR() {
+  const qrCanvas = document.querySelector("#qrcode canvas");
+  if (!qrCanvas) return;
+
+  const border = 16;
+
+  const qrSize = qrCanvas.width;
+  const exportSize = qrSize + border * 2;
+
+  const exportCanvas = document.createElement("canvas");
+  exportCanvas.width = exportSize;
+  exportCanvas.height = exportSize;
+
+  const ctx = exportCanvas.getContext("2d");
+
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, exportSize, exportSize);
+
+  const offsetX = Math.round((exportSize - qrCanvas.width) / 2);
+  const offsetY = Math.round((exportSize - qrCanvas.height) / 2);
+
+  ctx.drawImage(qrCanvas, offsetX, offsetY);
+
+  const link = document.createElement("a");
+  link.href = exportCanvas.toDataURL("image/png");
+  link.download = "qr-code.png";
+  link.click();
+}
+
+async function copyQR() {
+  const qrCanvas = document.querySelector("#qrcode canvas");
+  if (!qrCanvas) return;
+
+  const border = 16;
+  const size = qrCanvas.width + border * 2;
+
+  const exportCanvas = document.createElement("canvas");
+  exportCanvas.width = size;
+  exportCanvas.height = size;
+
+  const ctx = exportCanvas.getContext("2d");
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, size, size);
+  ctx.drawImage(qrCanvas, border, border);
+
+  const blob = await new Promise(res => exportCanvas.toBlob(res));
+  await navigator.clipboard.write([
+    new ClipboardItem({ "image/png": blob })
+  ]);
+
+  alert("QR image copied with white border");
+}
+
+function clearQR() {
+  lastURL = "";
+  document.getElementById("qrcode").innerHTML = "";
+  document.getElementById("url").value = "";
+}
+
+function toggleDark() {
+  document.body.classList.toggle("dark");
+}
+</script>
+
+</body>
+</html>
