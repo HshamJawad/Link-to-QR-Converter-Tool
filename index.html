@@ -510,7 +510,7 @@ body.pwa-landscape .card {
     <!-- LEFT -->
     <div class="left">
       <label>Input URL</label>
-      <input id="url" placeholder="https://example.com">
+      <input id="url" placeholder="https://example.com" onkeydown="if(event.key==='Enter') generateQR()">
       
       <!-- Generate button in mobile portrait for compact layout -->
       <button class="primary primary-mobile" onclick="generateQR()" style="display: none;">Generate QR</button>
