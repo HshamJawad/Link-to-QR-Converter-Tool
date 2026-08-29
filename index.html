@@ -8,8 +8,8 @@
   <title>Link to QR Converter Tool – Free Offline QR Code Generator</title>
 
   <!-- SEO Meta -->
-  <meta name="description" content="Link to QR Converter Tool is a free offline web and PWA tool that converts URLs into QR codes. Supports color selection, PNG download, dark mode, and works without internet.">
-  <meta name="keywords" content="QR code generator, link to qr, offline qr tool, free qr generator, PWA QR code, URL to QR">
+  <meta name="description" content="Link to QR Converter Tool is a free offline web and PWA tool that converts URLs into QR codes. Supports modern QR styles, custom colors, transparent background, PNG download, dark mode, and works without internet.">
+  <meta name="keywords" content="QR code generator, link to qr, offline qr tool, free qr generator, PWA QR code, URL to QR, rounded qr code, dotted qr code">
   <meta name="author" content="Husham Jawad Kadhim">
 
   <!-- Canonical -->
@@ -17,7 +17,7 @@
 
   <!-- Open Graph (Google + LinkedIn) -->
   <meta property="og:title" content="Link to QR Converter Tool">
-  <meta property="og:description" content="Free offline tool to convert links into QR codes with download, color options, and dark mode support.">
+  <meta property="og:description" content="Free offline tool to convert links into QR codes with modern styles, custom colors, transparent background and dark mode support.">
   <meta property="og:url" content="https://hshamjawad.github.io/Link-to-QR-Converter-Tool/">
   <meta property="og:type" content="website">
 
@@ -25,9 +25,10 @@
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#ffffff">
 
-  <!-- Icons (اختياري لكن ممتاز) -->
+  <!-- Icons -->
   <link rel="icon" href="icon-192.png" sizes="192x192">
   <link rel="apple-touch-icon" href="icon-192.png">
+
 <style>
 * { box-sizing: border-box; }
 
@@ -37,6 +38,7 @@
   --card: #ffffff;
   --text: #000;
   --border: #ccc;
+  --footer-h: 84px;
 }
 
 body.dark {
@@ -56,6 +58,7 @@ body {
   justify-content: center;
   align-items: center;
   color: var(--text);
+  padding-bottom: var(--footer-h);
 }
 
 /* ===== Card ===== */
@@ -67,7 +70,7 @@ body {
   border-radius: 18px;
   box-shadow: 0 18px 40px rgba(0,0,0,0.15);
   position: relative;
-  padding-bottom: 120px;
+  margin: 20px 0;
 }
 
 /* ===== Header ===== */
@@ -93,10 +96,9 @@ body {
   background: transparent;
   color: #007bff;
   cursor: pointer;
-
-  width: auto;         
-  white-space: nowrap;  
-  flex-shrink: 0;      
+  width: auto;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 body.dark .toggle {
@@ -160,7 +162,7 @@ button {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 8px;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 
 .color {
@@ -172,27 +174,76 @@ button {
 
 .color.selected {
   border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0,123,255,.25);
 }
+
+/* ===== Custom color row ===== */
+.custom-color {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.custom-color input[type="color"] {
+  width: 52px;
+  height: 42px;
+  padding: 2px;
+  margin: 0;
+  cursor: pointer;
+}
+
+.custom-color input[type="text"] {
+  margin: 0;
+  padding: 10px 12px;
+  text-transform: uppercase;
+}
+
+/* ===== Contrast warning ===== */
+.warn {
+  display: none;
+  font-size: 12px;
+  color: #b26a00;
+  background: #fff4e0;
+  border: 1px solid #f0c987;
+  border-radius: 6px;
+  padding: 8px 10px;
+  margin-bottom: 14px;
+}
+
+body.dark .warn {
+  background: #3a2f18;
+  color: #f0c987;
+  border-color: #6b552b;
+}
+
+.warn.show { display: block; }
 
 /* ===== QR ===== */
 #qrcode-wrapper {
   background: #ffffff;
-  padding: 16px;
   border-radius: 8px;
-  display: flex;
+  display: inline-flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 }
 
-#qrcode {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
+#qrcode-wrapper.transparent {
+  background-color: #ffffff;
+  background-image:
+    linear-gradient(45deg, #e6e6e6 25%, transparent 25%),
+    linear-gradient(-45deg, #e6e6e6 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #e6e6e6 75%),
+    linear-gradient(-45deg, transparent 75%, #e6e6e6 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 0 8px, 8px -8px, -8px 0;
 }
 
-#qrcode canvas {
-  display: block;
-}
+#qrcode-wrapper:empty { display: none; }
+
+#qrcode canvas, #qrcode svg { display: block; }
+
 .qr-center {
   display: flex;
   justify-content: center;
@@ -200,19 +251,68 @@ button {
   margin-top: 20px;
 }
 
-/* ===== Footer ===== */
+/* ===== Toast ===== */
+#toast {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(var(--footer-h) + 16px);
+  background: #333;
+  color: #fff;
+  font-size: 14px;
+  padding: 12px 18px;
+  border-radius: 8px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s ease;
+  z-index: 200;
+  max-width: 90%;
+  text-align: center;
+}
+
+#toast.show { opacity: .95; }
+
+/* ===== Fixed Footer ===== */
 .footer {
- padding-top: 10px;
-  position: static;
-  margin-top: 30px;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--card);
+  border-top: 1px solid var(--border);
+  padding: 10px 16px;
   font-size: 12px;
   text-align: center;
-  opacity: 0.75;
+  z-index: 100;
+  box-shadow: 0 -2px 12px rgba(0,0,0,0.10);
+  max-height: 55vh;
+  overflow-y: auto;
+}
+
+.footer details {
+  margin-top: 6px;
+}
+
+.footer summary {
+  cursor: pointer;
+  opacity: .8;
+  font-size: 11px;
+}
+
+.footer .disclaimer {
+  margin-top: 8px;
+  font-size: 11px;
+  opacity: .8;
+  line-height: 1.5;
+  text-align: justify;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* ===== Responsive ===== */
 @media (max-width: 768px) {
-.toggle {
+  .toggle {
     margin-left: auto;
     margin-top: 6px;
   }
@@ -220,19 +320,16 @@ button {
 
 /* ===== Mobile Portrait Layout - Compact ===== */
 @media (max-width: 768px) and (max-aspect-ratio: 4/3) {
+  :root { --footer-h: 76px; }
+
   body {
     align-items: flex-start;
-    padding: 20px 0;
+    padding-top: 20px;
   }
 
-  .card {
-    padding: 20px;
-    padding-bottom: 80px;
-  }
+  .card { padding: 20px; }
 
-  .header h2 {
-    font-size: 20px;
-  }
+  .header h2 { font-size: 20px; }
 
   .layout {
     flex-direction: column;
@@ -246,40 +343,16 @@ button {
     min-height: auto;
   }
 
-  /* Compact spacing for URL input section */
-  .left label {
-    margin-bottom: 6px;
-  }
+  .left label { margin-bottom: 6px; }
+  .left input { margin-bottom: 12px; }
+  .left .primary-mobile { margin-bottom: 16px; }
 
-  .left input {
-    margin-bottom: 12px;
-  }
-
-  /* Generate button immediately after URL input */
-  .left .primary-mobile {
-    margin-bottom: 16px;
-  }
-
-  /* Reduce QR preview spacing */
   .qr-center {
     margin-top: 12px;
     margin-bottom: 16px;
   }
 
-  /* Hide QR wrapper when empty */
-  #qrcode-wrapper:empty {
-    display: none;
-    padding: 0;
-  }
-
-  #qrcode-wrapper {
-    padding: 12px;
-  }
-
-  /* Compact right column */
-  .right {
-    margin-top: 12px;
-  }
+  .right { margin-top: 12px; }
 
   .right label {
     margin-top: 8px;
@@ -287,23 +360,16 @@ button {
   }
 
   .right input,
-  .right select {
-    margin-bottom: 12px;
-  }
+  .right select { margin-bottom: 12px; }
 
-  .color-picker {
-    margin-bottom: 16px;
-  }
+  .color-picker { margin-bottom: 10px; }
 
   button {
     margin-bottom: 8px;
     padding: 12px;
   }
 
-  .footer {
-    margin-top: 20px;
-    font-size: 11px;
-  }
+  .footer { font-size: 11px; }
 }
 
 /* ===== PWA Portrait Override ===== */
@@ -319,22 +385,15 @@ body.pwa-portrait .right {
   min-height: auto !important;
 }
 
-body.pwa-portrait .left input {
-  margin-bottom: 12px;
-}
-
-body.pwa-portrait .left .primary-mobile {
-  margin-bottom: 16px;
-}
+body.pwa-portrait .left input { margin-bottom: 12px; }
+body.pwa-portrait .left .primary-mobile { margin-bottom: 16px; }
 
 body.pwa-portrait .qr-center {
   margin-top: 12px;
   margin-bottom: 16px;
 }
 
-body.pwa-portrait .right {
-  margin-top: 12px;
-}
+body.pwa-portrait .right { margin-top: 12px; }
 
 body.pwa-portrait button {
   margin-bottom: 8px;
@@ -343,23 +402,17 @@ body.pwa-portrait button {
 
 /* ===== Mobile Landscape Layout - Desktop-like ===== */
 @media (max-width: 1024px) and (min-aspect-ratio: 4/3) {
+  :root { --footer-h: 64px; }
+
   body {
     align-items: flex-start;
-    padding: 10px 0;
+    padding-top: 10px;
   }
 
-  .card {
-    padding: 20px;
-    padding-bottom: 60px;
-  }
+  .card { padding: 20px; }
 
-  .header {
-    margin-bottom: 10px;
-  }
-
-  .header h2 {
-    font-size: 20px;
-  }
+  .header { margin-bottom: 10px; }
+  .header h2 { font-size: 20px; }
 
   .layout {
     flex-direction: row;
@@ -372,14 +425,9 @@ body.pwa-portrait button {
     width: 50%;
   }
 
-  .left {
-    min-height: auto;
-  }
+  .left { min-height: auto; }
 
-  /* Compact spacing in landscape */
-  label {
-    margin-bottom: 4px;
-  }
+  label { margin-bottom: 4px; }
 
   input, select {
     padding: 10px;
@@ -393,27 +441,16 @@ body.pwa-portrait button {
     font-size: 14px;
   }
 
-  .qr-center {
-    margin-top: 10px;
-  }
-
-  #qrcode-wrapper {
-    padding: 12px;
-  }
+  .qr-center { margin-top: 10px; }
 
   .color-picker {
     gap: 6px;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
   }
 
-  .color {
-    height: 32px;
-  }
+  .color { height: 30px; }
 
-  .footer {
-    margin-top: 15px;
-    font-size: 10px;
-  }
+  .footer { font-size: 10px; }
 }
 
 /* ===== PWA Landscape Override ===== */
@@ -428,13 +465,9 @@ body.pwa-landscape .right {
   width: 50% !important;
 }
 
-body.pwa-landscape .left {
-  min-height: auto !important;
-}
+body.pwa-landscape .left { min-height: auto !important; }
 
-body.pwa-landscape label {
-  margin-bottom: 4px;
-}
+body.pwa-landscape label { margin-bottom: 4px; }
 
 body.pwa-landscape input,
 body.pwa-landscape select {
@@ -449,51 +482,35 @@ body.pwa-landscape button {
   font-size: 14px;
 }
 
-body.pwa-landscape .qr-center {
-  margin-top: 10px;
-}
-
-body.pwa-landscape #qrcode-wrapper {
-  padding: 12px;
-}
+body.pwa-landscape .qr-center { margin-top: 10px; }
 
 body.pwa-landscape .color-picker {
   gap: 6px;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
-body.pwa-landscape .color {
-  height: 32px;
-}
+body.pwa-landscape .color { height: 30px; }
 
-/* Tablet Portrait - Keep mobile portrait behavior */
+/* Tablet Portrait */
 @media (min-width: 769px) and (max-width: 1024px) and (max-aspect-ratio: 4/3) {
-  .layout {
-    flex-direction: column;
-  }
+  .layout { flex-direction: column; }
 
   .left,
-  .right {
-    width: 100%;
-  }
+  .right { width: 100%; }
 
-  .right {
-    margin-top: 20px;
-  }
+  .right { margin-top: 20px; }
 }
 
 /* ===== PWA Landscape Force Reflow Fix ===== */
-body.pwa-landscape {
-  align-items: flex-start !important;
-}
- 
+body.pwa-landscape { align-items: flex-start !important; }
+
 body.pwa-landscape .card {
   width: 100% !important;
   max-width: 100% !important;
 }
-
 </style>
-  <script src="qrcode.min.js"></script>
+
+  <script src="qr-code-styling.js"></script>
 </head>
 
 <body>
@@ -509,9 +526,9 @@ body.pwa-landscape .card {
 
     <!-- LEFT -->
     <div class="left">
-      <label>Input URL</label>
+      <label for="url">Input URL</label>
       <input id="url" placeholder="https://example.com" onkeydown="if(event.key==='Enter') generateQR()">
-      
+
       <!-- Generate button in mobile portrait for compact layout -->
       <button class="primary primary-mobile" onclick="generateQR()" style="display: none;">Generate QR</button>
 
@@ -525,22 +542,54 @@ body.pwa-landscape .card {
     <!-- RIGHT -->
     <div class="right">
 
-      <label>QR Size</label>
+      <label for="size">QR Size</label>
       <select id="size" onchange="regenerate()">
         <option value="220">Small</option>
         <option value="280">Medium</option>
         <option value="340" selected>Large</option>
       </select>
 
+      <label for="style">QR Style</label>
+      <select id="style" onchange="regenerate()">
+        <option value="square" selected>Classic (Square)</option>
+        <option value="rounded">Rounded</option>
+        <option value="extra-rounded">Extra Rounded</option>
+        <option value="dots">Dots (Circles)</option>
+        <option value="classy">Classy</option>
+        <option value="classy-rounded">Classy Rounded</option>
+      </select>
+
+      <label for="bg">Background</label>
+      <select id="bg" onchange="regenerate()">
+        <option value="#ffffff" selected>White</option>
+        <option value="transparent">Transparent</option>
+      </select>
+
       <label>QR Color</label>
-      <div class="color-picker">
-        <div class="color selected" style="background:#000" data-color="#000"></div>
+      <div class="color-picker" id="palette">
+        <div class="color selected" style="background:#000000" data-color="#000000"></div>
         <div class="color" style="background:#1e88e5" data-color="#1e88e5"></div>
+        <div class="color" style="background:#0d47a1" data-color="#0d47a1"></div>
+        <div class="color" style="background:#00838f" data-color="#00838f"></div>
         <div class="color" style="background:#2e7d32" data-color="#2e7d32"></div>
+        <div class="color" style="background:#33691e" data-color="#33691e"></div>
+        <div class="color" style="background:#827717" data-color="#827717"></div>
         <div class="color" style="background:#d32f2f" data-color="#d32f2f"></div>
+        <div class="color" style="background:#ad1457" data-color="#ad1457"></div>
         <div class="color" style="background:#6a1b9a" data-color="#6a1b9a"></div>
-        <div class="color" style="background:#616161" data-color="#616161"></div>
+        <div class="color" style="background:#4527a0" data-color="#4527a0"></div>
         <div class="color" style="background:#f57c00" data-color="#f57c00"></div>
+        <div class="color" style="background:#5d4037" data-color="#5d4037"></div>
+        <div class="color" style="background:#616161" data-color="#616161"></div>
+      </div>
+
+      <div class="custom-color">
+        <input type="color" id="customColor" value="#000000" title="Pick a custom color">
+        <input type="text" id="hexColor" value="#000000" maxlength="7" placeholder="#000000" aria-label="Custom HEX color">
+      </div>
+
+      <div class="warn" id="contrastWarn">
+        Warning: this color may be too light. Low contrast QR codes are often unreadable by scanners.
       </div>
 
       <button class="primary primary-desktop" onclick="generateQR()">Generate QR</button>
@@ -551,38 +600,110 @@ body.pwa-landscape .card {
 
   </div>
 
-  <div class="footer">
-© 2026 Link to QR Converter Tool | by Husham Jawad Kadhim | Version 1.0 | All Rights Reserved
-<br><br>
-Disclaimer: The Link to QR Converter Tool is provided "as is" without warranty of any kind.
-The developer assumes no responsibility for any inaccuracies, errors, omissions, or inconsistencies
-in the generated QR codes. Users and facilitating institutions are solely responsible for verifying,
-validating, and making final decisions regarding all QR codes before use.
-  </div>
+</div>
 
+<div id="toast"></div>
+
+<div class="footer">
+  © 2026 Link to QR Converter Tool | by Husham Jawad Kadhim | Version 2.0 | All Rights Reserved
+  <details>
+    <summary>Disclaimer</summary>
+    <div class="disclaimer">
+      The Link to QR Converter Tool is provided "as is" without warranty of any kind.
+      The developer assumes no responsibility for any inaccuracies, errors, omissions, or inconsistencies
+      in the generated QR codes. Users and facilitating institutions are solely responsible for verifying,
+      validating, and making final decisions regarding all QR codes before use.
+    </div>
+  </details>
 </div>
 
 <script>
-let selectedColor = "#000";
+let selectedColor = "#000000";
 let lastURL = "";
+let qrCode = null;
+
+const wrapper   = document.getElementById("qrcode-wrapper");
+const container = document.getElementById("qrcode");
+const customColor = document.getElementById("customColor");
+const hexColor    = document.getElementById("hexColor");
+const contrastWarn = document.getElementById("contrastWarn");
+
+/* ===== Toast ===== */
+let toastTimer = null;
+function toast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 2600);
+}
+
+/* ===== Color handling ===== */
+function isValidHex(v) {
+  return /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(v);
+}
+
+function expandHex(v) {
+  if (v.length === 4) {
+    return "#" + v[1] + v[1] + v[2] + v[2] + v[3] + v[3];
+  }
+  return v.toLowerCase();
+}
+
+function relativeLuminance(hex) {
+  const r = parseInt(hex.substr(1, 2), 16) / 255;
+  const g = parseInt(hex.substr(3, 2), 16) / 255;
+  const b = parseInt(hex.substr(5, 2), 16) / 255;
+  const f = c => (c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4));
+  return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b);
+}
+
+function checkContrast(hex) {
+  // Contrast ratio against white; scanners need a clearly dark module color.
+  const ratio = (1.0 + 0.05) / (relativeLuminance(hex) + 0.05);
+  contrastWarn.classList.toggle("show", ratio < 4.5);
+}
+
+function setColor(hex, syncInputs) {
+  selectedColor = expandHex(hex);
+  if (syncInputs !== false) {
+    customColor.value = selectedColor;
+    hexColor.value = selectedColor.toUpperCase();
+  }
+  document.querySelectorAll(".color").forEach(x => {
+    x.classList.toggle("selected", x.dataset.color.toLowerCase() === selectedColor);
+  });
+  checkContrast(selectedColor);
+  regenerate();
+}
 
 document.querySelectorAll(".color").forEach(c => {
-  c.onclick = () => {
-    document.querySelectorAll(".color").forEach(x => x.classList.remove("selected"));
-    c.classList.add("selected");
-    selectedColor = c.dataset.color;
-    regenerate();
-  };
+  c.onclick = () => setColor(c.dataset.color, true);
 });
 
+customColor.addEventListener("input", () => {
+  hexColor.value = customColor.value.toUpperCase();
+  setColor(customColor.value, false);
+});
+
+hexColor.addEventListener("input", () => {
+  let v = hexColor.value.trim();
+  if (!v.startsWith("#")) v = "#" + v;
+  if (isValidHex(v)) {
+    setColor(v, false);
+    customColor.value = expandHex(v);
+  }
+});
+
+/* ===== URL ===== */
 function normalize(url) {
-  if (!url.startsWith("http")) return "https://" + url;
+  if (!/^https?:\/\//i.test(url)) return "https://" + url;
   return url;
 }
 
 function generateQR() {
   const input = document.getElementById("url");
-  if (!input.value.trim()) return alert("Please enter a URL");
+  if (!input.value.trim()) return toast("Please enter a URL");
 
   lastURL = normalize(input.value.trim());
   input.value = lastURL;
@@ -593,76 +714,86 @@ function regenerate() {
   if (lastURL) drawQR();
 }
 
-function drawQR() {
-  document.getElementById("qrcode").innerHTML = "";
-  const size = document.getElementById("size").value;
+/* ===== Style mapping ===== */
+function cornerStyles(dotType) {
+  switch (dotType) {
+    case "dots":
+      return { square: "dot", dot: "dot" };
+    case "rounded":
+    case "extra-rounded":
+    case "classy-rounded":
+      return { square: "extra-rounded", dot: "dot" };
+    case "classy":
+      return { square: "extra-rounded", dot: "square" };
+    default:
+      return { square: "square", dot: "square" };
+  }
+}
 
-  new QRCode(document.getElementById("qrcode"), {
-    text: lastURL,
+function buildOptions() {
+  const size = parseInt(document.getElementById("size").value, 10);
+  const dotType = document.getElementById("style").value;
+  const bg = document.getElementById("bg").value;
+  const corners = cornerStyles(dotType);
+
+  return {
     width: size,
     height: size,
-    colorDark: selectedColor,
-    colorLight: "#ffffff",
-    correctLevel: QRCode.CorrectLevel.H
-  });
+    type: "canvas",
+    data: lastURL,
+    margin: 16,
+    qrOptions: { errorCorrectionLevel: "H" },
+    dotsOptions: { color: selectedColor, type: dotType },
+    cornersSquareOptions: { color: selectedColor, type: corners.square },
+    cornersDotOptions: { color: selectedColor, type: corners.dot },
+    backgroundOptions: { color: bg === "transparent" ? "rgba(0,0,0,0)" : bg }
+  };
+}
+
+function drawQR() {
+  const opts = buildOptions();
+  wrapper.classList.toggle("transparent", document.getElementById("bg").value === "transparent");
+
+  if (!qrCode) {
+    qrCode = new QRCodeStyling(opts);
+    container.innerHTML = "";
+    qrCode.append(container);
+  } else {
+    qrCode.update(opts);
+  }
+}
+
+/* ===== Export ===== */
+function fileName() {
+  try {
+    return "qr-" + new URL(lastURL).hostname.replace(/^www\./, "");
+  } catch (e) {
+    return "qr-code";
+  }
 }
 
 function downloadQR() {
-  const qrCanvas = document.querySelector("#qrcode canvas");
-  if (!qrCanvas) return;
-
-  const border = 16;
-
-  const qrSize = qrCanvas.width;
-  const exportSize = qrSize + border * 2;
-
-  const exportCanvas = document.createElement("canvas");
-  exportCanvas.width = exportSize;
-  exportCanvas.height = exportSize;
-
-  const ctx = exportCanvas.getContext("2d");
-
-  ctx.fillStyle = "#ffffff";
-  ctx.fillRect(0, 0, exportSize, exportSize);
-
-  const offsetX = Math.round((exportSize - qrCanvas.width) / 2);
-  const offsetY = Math.round((exportSize - qrCanvas.height) / 2);
-
-  ctx.drawImage(qrCanvas, offsetX, offsetY);
-
-  const link = document.createElement("a");
-  link.href = exportCanvas.toDataURL("image/png");
-  link.download = "qr-code.png";
-  link.click();
+  if (!qrCode || !lastURL) return toast("Generate a QR code first");
+  qrCode.download({ name: fileName(), extension: "png" })
+    .catch(() => toast("Download failed"));
 }
 
 async function copyQR() {
-  const qrCanvas = document.querySelector("#qrcode canvas");
-  if (!qrCanvas) return;
-
-  const border = 16;
-  const size = qrCanvas.width + border * 2;
-
-  const exportCanvas = document.createElement("canvas");
-  exportCanvas.width = size;
-  exportCanvas.height = size;
-
-  const ctx = exportCanvas.getContext("2d");
-  ctx.fillStyle = "#ffffff";
-  ctx.fillRect(0, 0, size, size);
-  ctx.drawImage(qrCanvas, border, border);
-
-  const blob = await new Promise(res => exportCanvas.toBlob(res));
-  await navigator.clipboard.write([
-    new ClipboardItem({ "image/png": blob })
-  ]);
-
-  alert("QR image copied with white border");
+  if (!qrCode || !lastURL) return toast("Generate a QR code first");
+  try {
+    const blob = await qrCode.getRawData("png");
+    await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
+    toast("QR image copied to clipboard");
+  } catch (e) {
+    toast("Copy not supported in this browser — use Download PNG");
+  }
 }
 
 function clearQR() {
   lastURL = "";
-  document.getElementById("qrcode").innerHTML = "";
+  qrCode = null;
+  container.innerHTML = "";
+  wrapper.classList.remove("transparent");
   document.getElementById("url").value = "";
 }
 
@@ -670,10 +801,10 @@ function toggleDark() {
   document.body.classList.toggle("dark");
 }
 
-// Detect actual device orientation for PWA
+/* ===== Orientation handling ===== */
 function updatePWAOrientation() {
   const isLandscape = window.innerWidth > window.innerHeight;
-  
+
   if (isLandscape) {
     document.body.classList.add('pwa-landscape');
     document.body.classList.remove('pwa-portrait');
@@ -681,22 +812,21 @@ function updatePWAOrientation() {
     document.body.classList.add('pwa-portrait');
     document.body.classList.remove('pwa-landscape');
   }
-  
+
   updateButtonVisibility();
-  
+
   // Force reflow for Android PWA
   document.body.style.display = 'none';
   document.body.offsetHeight;
   document.body.style.display = '';
 }
 
-// Show/hide Generate button based on screen size and aspect ratio
 function updateButtonVisibility() {
-  const isMobilePortrait = window.matchMedia("(max-width: 768px) and (max-aspect-ratio: 4/3)").matches || 
+  const isMobilePortrait = window.matchMedia("(max-width: 768px) and (max-aspect-ratio: 4/3)").matches ||
                            (document.body.classList.contains('pwa-portrait') && window.innerWidth <= 768);
   const mobileBtn = document.querySelector(".primary-mobile");
   const desktopBtn = document.querySelector(".primary-desktop");
-  
+
   if (isMobilePortrait) {
     mobileBtn.style.display = "block";
     desktopBtn.style.display = "none";
@@ -706,7 +836,6 @@ function updateButtonVisibility() {
   }
 }
 
-// Run on load and orientation change
 updatePWAOrientation();
 window.addEventListener("resize", updatePWAOrientation);
 window.addEventListener("orientationchange", updatePWAOrientation);

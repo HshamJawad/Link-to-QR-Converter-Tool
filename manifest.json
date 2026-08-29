@@ -1,7 +1,8 @@
 {
+  "id": "/Link-to-QR-Converter-Tool/",
   "name": "Link to QR Converter Tool",
   "short_name": "Link to QR",
-  "description": "QR Generator Tool",
+  "description": "Free offline QR generator with modern QR styles, custom colors and transparent background.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
@@ -10,16 +11,25 @@
   "orientation": "any",
   "lang": "en",
   "dir": "ltr",
+  "categories": ["utilities", "productivity"],
   "icons": [
     {
       "src": "icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }
