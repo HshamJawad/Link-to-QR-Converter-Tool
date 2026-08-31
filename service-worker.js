@@ -1,9 +1,10 @@
-const CACHE_NAME = "link-to-qr-cache-v2";
+const CACHE_NAME = "link-to-qr-cache-v3";
 const FILES_TO_CACHE = [
   "./",
   "./index.html",
   "./manifest.json",
   "./qr-code-styling.js",
+  "./fonts/Cairo.woff2",
   "./icon-192.png",
   "./icon-512.png"
 ];
@@ -16,7 +17,7 @@ self.addEventListener("install", event => {
   );
 });
 
-// Remove old caches so version 2.0 replaces version 1.0 on existing installs
+// Remove old caches so the new version replaces previous installs
 self.addEventListener("activate", event => {
   event.waitUntil(
     caches.keys()

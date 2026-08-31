@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,8 +8,8 @@
   <title>Link to QR Converter Tool – Free Offline QR Code Generator</title>
 
   <!-- SEO Meta -->
-  <meta name="description" content="Link to QR Converter Tool is a free offline web and PWA tool that converts URLs into QR codes. Supports modern QR styles, custom colors, transparent background, PNG download, dark mode, and works without internet.">
-  <meta name="keywords" content="QR code generator, link to qr, offline qr tool, free qr generator, PWA QR code, URL to QR, rounded qr code, dotted qr code">
+  <meta name="description" content="Link to QR Converter Tool is a free offline web and PWA tool that converts URLs into QR codes. Supports modern QR styles, custom colors, transparent background, PNG download, Arabic interface, dark mode, and works without internet.">
+  <meta name="keywords" content="QR code generator, link to qr, offline qr tool, free qr generator, PWA QR code, URL to QR, rounded qr code, dotted qr code, مولد رمز الاستجابة السريعة">
   <meta name="author" content="Husham Jawad Kadhim">
 
   <!-- Canonical -->
@@ -17,7 +17,7 @@
 
   <!-- Open Graph (Google + LinkedIn) -->
   <meta property="og:title" content="Link to QR Converter Tool">
-  <meta property="og:description" content="Free offline tool to convert links into QR codes with modern styles, custom colors, transparent background and dark mode support.">
+  <meta property="og:description" content="Free offline tool to convert links into QR codes with modern styles, custom colors, transparent background, Arabic interface and dark mode support.">
   <meta property="og:url" content="https://hshamjawad.github.io/Link-to-QR-Converter-Tool/">
   <meta property="og:type" content="website">
 
@@ -29,8 +29,21 @@
   <link rel="icon" href="icon-192.png" sizes="192x192">
   <link rel="apple-touch-icon" href="icon-192.png">
 
+  <!-- Font preload (variable Cairo) -->
+  <link rel="preload" href="fonts/Cairo.woff2" as="font" type="font/woff2" crossorigin>
+
 <style>
 * { box-sizing: border-box; }
+
+/* ===== Variable Font ===== */
+@font-face {
+  font-family: 'Cairo';
+  src: url('fonts/Cairo.woff2') format('woff2-variations'),
+       url('fonts/Cairo.woff2') format('woff2');
+  font-weight: 200 1000;
+  font-style: normal;
+  font-display: swap;
+}
 
 /* ===== Theme ===== */
 :root {
@@ -39,6 +52,7 @@
   --text: #000;
   --border: #ccc;
   --footer-h: 84px;
+  --font: Arial, Helvetica, sans-serif;
 }
 
 body.dark {
@@ -48,10 +62,14 @@ body.dark {
   --border: #444;
 }
 
+body.ar {
+  --font: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
+}
+
 /* ===== Base ===== */
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
+  font-family: var(--font);
   background: var(--bg);
   min-height: 100vh;
   display: flex;
@@ -59,6 +77,10 @@ body {
   align-items: center;
   color: var(--text);
   padding-bottom: var(--footer-h);
+}
+
+body.ar {
+  letter-spacing: 0;
 }
 
 /* ===== Card ===== */
@@ -80,12 +102,25 @@ body {
   justify-content: space-between;
   gap: 12px;
   flex-wrap: wrap;
+  margin-bottom: 10px;
 }
 
 .header h2 {
   margin: 0;
   font-size: 26px;
   white-space: nowrap;
+}
+
+body.ar .header h2 {
+  font-weight: 700;
+  white-space: normal;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
 }
 
 .toggle {
@@ -99,11 +134,24 @@ body {
   width: auto;
   white-space: nowrap;
   flex-shrink: 0;
+  margin: 0;
+  font-family: inherit;
+}
+
+.toggle.lang {
+  border-color: #6c757d;
+  color: #6c757d;
+  font-weight: bold;
 }
 
 body.dark .toggle {
   border-color: #ccc;
   color: #ccc;
+}
+
+body.dark .toggle.lang {
+  border-color: #9aa0a6;
+  color: #9aa0a6;
 }
 
 /* ===== Layout ===== */
@@ -139,6 +187,13 @@ input, select {
   margin-bottom: 16px;
   background: var(--card);
   color: var(--text);
+  font-family: inherit;
+}
+
+/* URL always stays left-to-right, even in Arabic mode */
+#url {
+  direction: ltr;
+  text-align: left;
 }
 
 /* ===== Buttons ===== */
@@ -150,6 +205,7 @@ button {
   border: none;
   cursor: pointer;
   margin-bottom: 10px;
+  font-family: inherit;
 }
 
 button:disabled {
@@ -197,12 +253,15 @@ button:disabled {
   padding: 2px;
   margin: 0;
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 .custom-color input[type="text"] {
   margin: 0;
   padding: 10px 12px;
   text-transform: uppercase;
+  direction: ltr;
+  text-align: left;
 }
 
 /* ===== Contrast warning ===== */
@@ -215,6 +274,7 @@ button:disabled {
   border-radius: 6px;
   padding: 8px 10px;
   margin-bottom: 14px;
+  line-height: 1.6;
 }
 
 body.dark .warn {
@@ -274,6 +334,7 @@ body.dark .warn {
   z-index: 200;
   max-width: 90%;
   text-align: center;
+  font-family: var(--font);
 }
 
 #toast.show { opacity: .95; }
@@ -295,9 +356,7 @@ body.dark .warn {
   overflow-y: auto;
 }
 
-.footer details {
-  margin-top: 6px;
-}
+.footer details { margin-top: 6px; }
 
 .footer summary {
   cursor: pointer;
@@ -309,7 +368,7 @@ body.dark .warn {
   margin-top: 8px;
   font-size: 11px;
   opacity: .8;
-  line-height: 1.5;
+  line-height: 1.7;
   text-align: justify;
   max-width: 900px;
   margin-left: auto;
@@ -318,7 +377,7 @@ body.dark .warn {
 
 /* ===== Responsive ===== */
 @media (max-width: 768px) {
-  .toggle {
+  .header-actions {
     margin-left: auto;
     margin-top: 6px;
   }
@@ -524,15 +583,18 @@ body.pwa-landscape .card {
 <div class="card">
 
   <div class="header">
-    <h2>Link to QR Converter Tool</h2>
-    <button class="toggle" onclick="toggleDark()">Toggle Dark Mode</button>
+    <h2 id="appTitle">Link to QR Converter Tool</h2>
+    <div class="header-actions">
+      <button class="toggle lang" id="langBtn" onclick="toggleLang()">العربية</button>
+      <button class="toggle" id="darkBtn" onclick="toggleDark()">Toggle Dark Mode</button>
+    </div>
   </div>
 
   <div class="layout">
 
     <!-- LEFT -->
     <div class="left">
-      <label for="url">Input URL</label>
+      <label for="url" id="lblUrl">Input URL</label>
       <input id="url" placeholder="https://example.com" oninput="updateActionState()" onkeydown="if(event.key==='Enter') generateQR()">
 
       <!-- Generate button in mobile portrait for compact layout -->
@@ -548,14 +610,14 @@ body.pwa-landscape .card {
     <!-- RIGHT -->
     <div class="right">
 
-      <label for="size">QR Size</label>
+      <label for="size" id="lblSize">QR Size</label>
       <select id="size" onchange="regenerate()">
         <option value="220">Small</option>
         <option value="280">Medium</option>
         <option value="340" selected>Large</option>
       </select>
 
-      <label for="style">QR Style</label>
+      <label for="style" id="lblStyle">QR Style</label>
       <select id="style" onchange="regenerate()">
         <option value="square" selected>Classic (Square)</option>
         <option value="rounded">Rounded</option>
@@ -565,13 +627,13 @@ body.pwa-landscape .card {
         <option value="classy-rounded">Classy Rounded</option>
       </select>
 
-      <label for="bg">Background</label>
+      <label for="bg" id="lblBg">Background</label>
       <select id="bg" onchange="regenerate()">
         <option value="#ffffff" selected>White</option>
         <option value="transparent">Transparent</option>
       </select>
 
-      <label>QR Color</label>
+      <label id="lblColor">QR Color</label>
       <div class="color-picker" id="palette">
         <div class="color selected" style="background:#000000" data-color="#000000"></div>
         <div class="color" style="background:#1e88e5" data-color="#1e88e5"></div>
@@ -611,10 +673,10 @@ body.pwa-landscape .card {
 <div id="toast"></div>
 
 <div class="footer">
-  © 2026 Link to QR Converter Tool | by Husham Jawad Kadhim | Version 2.0 | All Rights Reserved
+  <div id="footerLine">© 2026 Link to QR Converter Tool | by Husham Jawad Kadhim | Version 2.1 | All Rights Reserved</div>
   <details>
-    <summary>Disclaimer</summary>
-    <div class="disclaimer">
+    <summary id="discSummary">Disclaimer</summary>
+    <div class="disclaimer" id="discText">
       The Link to QR Converter Tool is provided "as is" without warranty of any kind.
       The developer assumes no responsibility for any inaccuracies, errors, omissions, or inconsistencies
       in the generated QR codes. Users and facilitating institutions are solely responsible for verifying,
@@ -624,6 +686,133 @@ body.pwa-landscape .card {
 </div>
 
 <script>
+/* =========================================================
+   i18n
+   ========================================================= */
+const I18N = {
+  en: {
+    dir: "ltr",
+    langBtn: "العربية",
+    docTitle: "Link to QR Converter Tool – Free Offline QR Code Generator",
+    appTitle: "Link to QR Converter Tool",
+    darkBtn: "Toggle Dark Mode",
+    lblUrl: "Input URL",
+    urlPlaceholder: "https://example.com",
+    generate: "Generate QR",
+    lblSize: "QR Size",
+    sizes: ["Small", "Medium", "Large"],
+    lblStyle: "QR Style",
+    styles: ["Classic (Square)", "Rounded", "Extra Rounded", "Dots (Circles)", "Classy", "Classy Rounded"],
+    lblBg: "Background",
+    backgrounds: ["White", "Transparent"],
+    lblColor: "QR Color",
+    customColorTitle: "Pick a custom color",
+    hexAria: "Custom HEX color",
+    contrast: "Warning: this color may be too light. Low contrast QR codes are often unreadable by scanners.",
+    download: "Download PNG",
+    copy: "Copy QR Image",
+    clear: "Delete",
+    footer: "© 2026 Link to QR Converter Tool | by Husham Jawad Kadhim | Version 2.1 | All Rights Reserved",
+    discSummary: "Disclaimer",
+    discText: "The Link to QR Converter Tool is provided \u201Cas is\u201D without warranty of any kind. The developer assumes no responsibility for any inaccuracies, errors, omissions, or inconsistencies in the generated QR codes. Users and facilitating institutions are solely responsible for verifying, validating, and making final decisions regarding all QR codes before use.",
+    tEnterUrl: "Please enter a URL",
+    tGenerateFirst: "Generate a QR code first",
+    tCopied: "QR image copied to clipboard",
+    tCopyFail: "Copy not supported in this browser — use Download PNG",
+    tDownloadFail: "Download failed"
+  },
+  ar: {
+    dir: "rtl",
+    langBtn: "English",
+    docTitle: "أداة تحويل الروابط إلى رموز QR – مولّد مجاني يعمل بلا إنترنت",
+    appTitle: "أداة تحويل الروابط إلى رموز QR",
+    darkBtn: "الوضع الليلي",
+    lblUrl: "الرابط",
+    urlPlaceholder: "https://example.com",
+    generate: "توليد الرمز",
+    lblSize: "حجم الرمز",
+    sizes: ["صغير", "متوسط", "كبير"],
+    lblStyle: "نمط الرمز",
+    styles: ["كلاسيكي (مربع)", "مدوّر", "مدوّر جداً", "نقاط (دوائر)", "أنيق", "أنيق مدوّر"],
+    lblBg: "الخلفية",
+    backgrounds: ["أبيض", "شفاف"],
+    lblColor: "لون الرمز",
+    customColorTitle: "اختر لوناً حراً",
+    hexAria: "لون HEX مخصص",
+    contrast: "تنبيه: هذا اللون فاتح جداً. الرموز ذات التباين المنخفض غالباً ما يتعذّر على القارئات مسحها.",
+    download: "تنزيل PNG",
+    copy: "نسخ صورة الرمز",
+    clear: "حذف",
+    footer: "© 2026 أداة تحويل الروابط إلى رموز QR | إعداد حشام جواد كاظم | الإصدار 2.1 | جميع الحقوق محفوظة",
+    discSummary: "إخلاء المسؤولية",
+    discText: "تُقدَّم أداة تحويل الروابط إلى رموز QR كما هي دون أي ضمان من أي نوع. لا يتحمّل المطوّر أي مسؤولية عن أي عدم دقة أو أخطاء أو إغفال أو تعارض في الرموز المولَّدة. يتحمّل المستخدمون والجهات المستفيدة وحدهم مسؤولية التحقق من جميع الرموز والتثبت منها واتخاذ القرار النهائي بشأنها قبل الاستخدام.",
+    tEnterUrl: "الرجاء إدخال رابط",
+    tGenerateFirst: "قم بتوليد الرمز أولاً",
+    tCopied: "تم نسخ صورة الرمز إلى الحافظة",
+    tCopyFail: "النسخ غير مدعوم في هذا المتصفح — استخدم تنزيل PNG",
+    tDownloadFail: "فشل التنزيل"
+  }
+};
+
+let lang = "en";
+const t = () => I18N[lang];
+
+function applyLang() {
+  const L = t();
+
+  document.documentElement.lang = lang;
+  document.documentElement.dir = L.dir;
+  document.body.classList.toggle("ar", lang === "ar");
+  document.title = L.docTitle;
+
+  document.getElementById("langBtn").textContent = L.langBtn;
+  document.getElementById("darkBtn").textContent = L.darkBtn;
+  document.getElementById("appTitle").textContent = L.appTitle;
+
+  document.getElementById("lblUrl").textContent = L.lblUrl;
+  document.getElementById("url").placeholder = L.urlPlaceholder;
+
+  document.querySelectorAll(".primary-mobile, .primary-desktop")
+    .forEach(b => b.textContent = L.generate);
+
+  document.getElementById("lblSize").textContent = L.lblSize;
+  setOptions("size", L.sizes);
+
+  document.getElementById("lblStyle").textContent = L.lblStyle;
+  setOptions("style", L.styles);
+
+  document.getElementById("lblBg").textContent = L.lblBg;
+  setOptions("bg", L.backgrounds);
+
+  document.getElementById("lblColor").textContent = L.lblColor;
+  document.getElementById("customColor").title = L.customColorTitle;
+  document.getElementById("hexColor").setAttribute("aria-label", L.hexAria);
+  document.getElementById("contrastWarn").textContent = L.contrast;
+
+  document.getElementById("btnDownload").textContent = L.download;
+  document.getElementById("btnCopy").textContent = L.copy;
+  document.getElementById("btnClear").textContent = L.clear;
+
+  document.getElementById("footerLine").textContent = L.footer;
+  document.getElementById("discSummary").textContent = L.discSummary;
+  document.getElementById("discText").textContent = L.discText;
+}
+
+function setOptions(selectId, labels) {
+  const sel = document.getElementById(selectId);
+  Array.from(sel.options).forEach((opt, i) => {
+    if (labels[i]) opt.textContent = labels[i];
+  });
+}
+
+function toggleLang() {
+  lang = (lang === "en") ? "ar" : "en";
+  applyLang();
+}
+
+/* =========================================================
+   State
+   ========================================================= */
 let selectedColor = "#000000";
 let lastURL = "";
 let qrCode = null;
@@ -637,11 +826,11 @@ const contrastWarn = document.getElementById("contrastWarn");
 /* ===== Toast ===== */
 let toastTimer = null;
 function toast(msg) {
-  const t = document.getElementById("toast");
-  t.textContent = msg;
-  t.classList.add("show");
+  const el = document.getElementById("toast");
+  el.textContent = msg;
+  el.classList.add("show");
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove("show"), 2600);
+  toastTimer = setTimeout(() => el.classList.remove("show"), 2800);
 }
 
 /* ===== Color handling ===== */
@@ -725,7 +914,7 @@ function updateActionState() {
 
 function generateQR() {
   const input = document.getElementById("url");
-  if (!input.value.trim()) return toast("Please enter a URL");
+  if (!input.value.trim()) return toast(t().tEnterUrl);
 
   lastURL = normalize(input.value.trim());
   input.value = lastURL;
@@ -796,19 +985,19 @@ function fileName() {
 }
 
 function downloadQR() {
-  if (!qrCode || !lastURL) return toast("Generate a QR code first");
+  if (!qrCode || !lastURL) return toast(t().tGenerateFirst);
   qrCode.download({ name: fileName(), extension: "png" })
-    .catch(() => toast("Download failed"));
+    .catch(() => toast(t().tDownloadFail));
 }
 
 async function copyQR() {
-  if (!qrCode || !lastURL) return toast("Generate a QR code first");
+  if (!qrCode || !lastURL) return toast(t().tGenerateFirst);
   try {
     const blob = await qrCode.getRawData("png");
     await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
-    toast("QR image copied to clipboard");
+    toast(t().tCopied);
   } catch (e) {
-    toast("Copy not supported in this browser — use Download PNG");
+    toast(t().tCopyFail);
   }
 }
 
@@ -860,6 +1049,8 @@ function updateButtonVisibility() {
   }
 }
 
+/* ===== Init ===== */
+applyLang();
 updatePWAOrientation();
 updateActionState();
 window.addEventListener("resize", updatePWAOrientation);
